@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto Público en Colombia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #34495e;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #e74c3c;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        p, li {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+
+        .stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .stats h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .law-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .process-step {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 5px solid #27ae60;
+        }
+
+        .principle-item {
+            background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 4px solid #9b59b6;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                bottom: 20px;
+            }
+            
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">12</span>
+        </div>
+
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <h1>Presupuesto Público en Colombia</h1>
+            <div class="highlight">
+                <h2 style="text-align: center; border: none; margin-bottom: 20px; color: #2c3e50;">Presentación Completa</h2>
+                <p style="text-align: center; font-size: 1.3em; color: #34495e;">
+                    Instrumento fundamental de planificación financiera del Estado para asignar recursos públicos y cumplir con los fines esenciales del Estado
+                </p>
+            </div>
+            <div class="stats">
+                <h3>Presupuesto General de la Nación 2024</h3>
+                <div class="stat-item">
+                    <strong>$502.6 Billones</strong><br>
+                    Monto Total
+                </div>
+                <div class="stat-item">
+                    <strong>8%</strong><br>
+                    Crecimiento vs 2023
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Marco Constitucional y Legal -->
+        <div class="slide">
+            <h2>Marco Constitucional y Legal</h2>
+            
+            <h3>Fundamento Constitucional</h3>
+            <ul>
+                <li><strong>Artículo 345:</strong> Establece las bases del régimen presupuestal</li>
+                <li><strong>Artículo 346:</strong> Define el Presupuesto General de la Nación</li>
+                <li><strong>Artículo 347:</strong> Regula la presentación y aprobación del presupuesto</li>
+                <li><strong>Artículo 348:</strong> Principios presupuestales</li>
+            </ul>
+
+            <div class="law-box">
+                <h4>Decreto 111 de 1996 - Estatuto Orgánico del Presupuesto</h4>
+                <p><strong>La norma más importante en materia presupuestal</strong></p>
+                <p>Compila las leyes 38 de 1989, 179 de 1994 y 225 de 1995, estableciendo el marco normativo integral del sistema presupuestal colombiano.</p>
+            </div>
+
+            <h3>Otras Normas Relevantes</h3>
+            <ul>
+                <li><strong>Ley 152 de 1994:</strong> Ley Orgánica del Plan de Desarrollo</li>
+                <li><strong>Ley 819 de 2003:</strong> Normas sobre transparencia y responsabilidad fiscal</li>
+                <li><strong>Ley 38 de 1989:</strong> Organización Contraloría General</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Principios -->
+        <div class="slide">
+            <h2>Principios del Presupuesto Público</h2>
+            <p>Establecidos en el Decreto 111 de 1996:</p>
+            
+            <div class="principle-item">
+                <strong>1. Planificación:</strong> Concordancia con los planes de desarrollo
+            </div>
+            <div class="principle-item">
+                <strong>2. Anualidad:</strong> Vigencia por períodos anuales
+            </div>
+            <div class="principle-item">
+                <strong>3. Universalidad:</strong> Inclusión de todos los ingresos y gastos
+            </div>
+            <div class="principle-item">
+                <strong>4. Unidad de Caja:</strong> Manejo unificado de recursos
+            </div>
+            <div class="principle-item">
+                <strong>5. Programación Integral:</strong> Coordinación entre entidades
+            </div>
+            <div class="principle-item">
+                <strong>6. Especialización:</strong> Destinación específica de recursos
+            </div>
+            <div class="principle-item">
+                <strong>7. Inembargabilidad:</strong> Protección de recursos públicos
+            </div>
+            <div class="principle-item">
+                <strong>8. Coherencia Macroeconómica:</strong> Armonía con política económica
+            </div>
+        </div>
+
+        <!-- Slide 4: Estructura del PGN -->
+        <div class="slide">
+            <h2>Estructura del Presupuesto General de la Nación</h2>
+            
+            <div class="two-column">
+                <div>
+                    <h3>Composición del PGN</h3>
+                    <ul>
+                        <li><strong>Presupuesto Nacional:</strong> Administración central</li>
+                        <li><strong>Presupuesto de Establecimientos Públicos:</strong> Entidades descentralizadas</li>
+                        <li><strong>Presupuesto de Seguridad Social:</strong> Sistema de protección social</li>
+                    </ul>
+
+                    <h3>Clasificación de Ingresos</h3>
+                    <ul>
+                        <li><strong>Ingresos Corrientes:</strong> Tributarios y no tributarios</li>
+                        <li><strong>Recursos de Capital:</strong> Crédito externo e interno</li>
+                        <li><strong>Contribuciones Parafiscales:</strong> Aportes sectoriales</li>
+                        <li><strong>Fondos Especiales:</strong> Destinación específica</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Clasificación de Gastos</h3>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <strong>~40%</strong><br>
+                            Funcionamiento
+                        </div>
+                        <div class="stat-item">
+                            <strong>~35%</strong><br>
+                            Inversión
+                        </div>
+                        <div class="stat-item">
+                            <strong>~25%</strong><br>
+                            Servicio Deuda
+                        </div>
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Gastos de Funcionamiento:</strong> Operación del Estado</li>
+                        <li><strong>Gastos de Inversión:</strong> Infraestructura y desarrollo</li>
+                        <li><strong>Servicio de la Deuda:</strong> Pago de obligaciones financieras</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Proceso Presupuestal -->
+        <div class="slide">
+            <h2>Proceso Presupuestal - Ciclo Completo</h2>
+            
+            <div class="process-step">
+                <h4>1. Programación (Enero - Marzo)</h4>
+                <p>• Elaboración del Marco Fiscal de Mediano Plazo<br>
+                • Definición de techos presupuestales<br>
+                • Coordinación entre MHCP y DNP</p>
+            </div>
+
+            <div class="process-step">
+                <h4>2. Formulación (Abril - Julio)</h4>
+                <p>• Preparación del anteproyecto de presupuesto<br>
+                • Revisión sectorial y territorial<br>
+                • Ajustes macroeconómicos</p>
+            </div>
+
+            <div class="process-step">
+                <h4>3. Presentación y Aprobación (Julio - Diciembre)</h4>
+                <p>• Presentación al Congreso (antes del 20 de julio)<br>
+                • Debate en Comisiones Económicas<br>
+                • Aprobación en sesiones plenarias</p>
+            </div>
+
+            <div class="process-step">
+                <h4>4. Ejecución (Enero - Diciembre)</h4>
+                <p>• Liquidación del presupuesto<br>
+                • Ejecución de gastos e ingresos<br>
+                • Seguimiento y control</p>
+            </div>
+
+            <div class="process-step">
+                <h4>5. Evaluación y Control</h4>
+                <p>• Control previo, perceptivo y posterior<br>
+                • Evaluación de resultados<br>
+                • Rendición de cuentas</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Cifras Actuales -->
+        <div class="slide">
+            <h2>Cifras del Presupuesto Actual</h2>
+            
+            <div class="stats">
+                <h3>Presupuesto General de la Nación 2024</h3>
+                <div class="stat-item">
+                    <strong>$502.6 Billones</strong><br>
+                    Monto Total
+                </div>
+                <div class="stat-item">
+                    <strong>8%</strong><br>
+                    Crecimiento vs 2023
+                </div>
+            </div>
+
+            <div class="highlight">
+                <h3>Presupuesto 2025</h3>
+                <div class="two-column">
+                    <div>
+                        <h4>Propuesta Inicial</h4>
+                        <p><strong>$523 billones de pesos</strong></p>
+                    </div>
+                    <div>
+                        <h4>Propuesta Alternativa</h4>
+                        <p><strong>$518 billones de pesos</strong></p>
+                    </div>
+                </div>
+                <p><strong>Estado actual:</strong> En debate parlamentario (se hundió inicialmente en comisiones)</p>
+            </div>
+
+            <h3>Distribución Principal del Gasto</h3>
+            <div class="two-column">
+                <div class="stat-item">
+                    <strong>Funcionamiento</strong><br>
+                    ~40% del presupuesto
+                </div>
+                <div class="stat-item">
+                    <strong>Inversión</strong><br>
+                    ~35% del presupuesto
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <div class="stat-item">
+                    <strong>Servicio de la Deuda</strong><br>
+                    ~25% del presupuesto
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Actores e Instituciones -->
+        <div class="slide">
+            <h2>Actores e Instituciones Clave</h2>
+            
+            <div class="two-column">
+                <div>
+                    <h3>Poder Ejecutivo</h3>
+                    <div class="highlight">
+                        <h4>Ministerio de Hacienda y Crédito Público (MHCP)</h4>
+                        <p>Coordinador del proceso presupuestal</p>
+                        
+                        <h4>Departamento Nacional de Planeación (DNP)</h4>
+                        <p>Planificación y seguimiento</p>
+                        
+                        <h4>Presidencia de la República</h4>
+                        <p>Decisión política final</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Poder Legislativo</h3>
+                    <div class="highlight">
+                        <h4>Congreso de la República</h4>
+                        <p>Aprobación del presupuesto</p>
+                        
+                        <h4>Comisiones Económicas</h4>
+                        <p>Estudio técnico y debate</p>
+                        
+                        <h4>Senado y Cámara</h4>
+                        <p>Votación final</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Órganos de Control</h3>
+            <div class="two-column">
+                <div class="law-box">
+                    <strong>Contraloría General de la República:</strong> Control fiscal
+                </div>
+                <div class="law-box">
+                    <strong>Procuraduría General:</strong> Control disciplinario
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <div class="law-box" style="display: inline-block; width: 45%;">
+                    <strong>Fiscalía General:</strong> Control penal
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Desafíos Actuales -->
+        <div class="slide">
+            <h2>Desafíos Actuales del Presupuesto Público</h2>
+            
+            <div class="two-column">
+                <div>
+                    <h3>Desafíos Estructurales</h3>
+                    <div class="process-step">
+                        <h4>1. Déficit Fiscal</h4>
+                        <p>Diferencia entre ingresos y gastos</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>2. Alto Nivel de Endeudamiento</h4>
+                        <p>Sostenibilidad fiscal a largo plazo</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>3. Rigidez Presupuestal</h4>
+                        <p>Gastos obligatorios y transferencias</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>4. Inequidad Regional</h4>
+                        <p>Distribución territorial de recursos</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Desafíos Coyunturales</h3>
+                    <div class="law-box">
+                        <h4>1. Efectos Post-Pandemia</h4>
+                        <p>Recuperación económica gradual</p>
+                    </div>
+                    <div class="law-box">
+                        <h4>2. Inflación</h4>
+                        <p>Presión sobre costos operativos</p>
+                    </div>
+                    <div class="law-box">
+                        <h4>3. Volatilidad de Ingresos</h4>
+                        <p>Dependencia de commodities</p>
+                    </div>
+                    <div class="law-box">
+                        <h4>4. Presiones Sociales</h4>
+                        <p>Demandas de inversión social</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Innovaciones y Reformas -->
+        <div class="slide">
+            <h2>Innovaciones y Reformas Recientes</h2>
+            
+            <div class="highlight">
+                <h3>Tendencias de Modernización</h3>
+                <div class="two-column">
+                    <div>
+                        <h4>1. Presupuesto Abierto</h4>
+                        <p>Transparencia y participación ciudadana</p>
+                        
+                        <h4>2. Presupuesto por Resultados</h4>
+                        <p>Enfoque en outcomes y impacto</p>
+                    </div>
+                    <div>
+                        <h4>3. Marco Fiscal de Mediano Plazo</h4>
+                        <p>Planificación plurianual estratégica</p>
+                        
+                        <h4>4. Digitalización</h4>
+                        <p>Sistemas integrados de información</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Propuestas de Reforma en Curso</h3>
+            <ul>
+                <li><strong>Modificación del Decreto 111 de 1996:</strong> Actualización normativa</li>
+                <li><strong>Implementación de políticas de transparencia:</strong> Acceso a información</li>
+                <li><strong>Fortalecimiento del control legislativo:</strong> Mayor participación del Congreso</li>
+                <li><strong>Mejoramiento de la participación ciudadana:</strong> Veedurías y control social</li>
+            </ul>
+            
+            <div class="stats">
+                <h4>Objetivo: Presupuesto más eficiente, transparente y participativo</h4>
+            </div>
+        </div>
+
+        <!-- Slide 10: Importancia y Impacto Social -->
+        <div class="slide">
+            <h2>Importancia y Impacto Social</h2>
+            
+            <div class="highlight">
+                <h3>Función Social del Presupuesto</h3>
+                <div class="two-column">
+                    <div class="principle-item">
+                        <strong>Redistribución del Ingreso</strong><br>
+                        Transferencias y subsidios focalizados
+                    </div>
+                    <div class="principle-item">
+                        <strong>Provisión de Servicios Públicos</strong><br>
+                        Educación, salud, seguridad
+                    </div>
+                    <div class="principle-item">
+                        <strong>Inversión en Infraestructura</strong><br>
+                        Desarrollo económico y social
+                    </div>
+                    <div class="principle-item">
+                        <strong>Estabilización Macroeconómica</strong><br>
+                        Política fiscal contracíclica
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Sectores Prioritarios de Inversión</h3>
+            <div class="stats">
+                <div class="stat-item">
+                    <strong>Educación</strong><br>
+                    Mayor asignación presupuestal
+                </div>
+                <div class="stat-item">
+                    <strong>Salud</strong><br>
+                    Protección social
+                </div>
+                <div class="stat-item">
+                    <strong>Infraestructura</strong><br>
+                    Conectividad y transporte
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="stat-item">
+                    <strong>Seguridad y Defensa</strong><br>
+                    Orden público
+                </div>
+                <div class="stat-item">
+                    <strong>Ciencia y Tecnología</strong><br>
+                    Innovación y desarrollo
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Control y Transparencia -->
+        <div class="slide">
+            <h2>Control y Transparencia</h2>
+            
+            <div class="two-column">
+                <div>
+                    <h3>Mecanismos de Control</h3>
+                    <div class="process-step">
+                        <h4>1. Control Interno</h4>
+                        <p>Cada entidad pública</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>2. Control Fiscal</h4>
+                        <p>Contraloría General de la República</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>3. Control Político</h4>
+                        <p>Congreso de la República</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>4. Control Social</h4>
+                        <p>Veedurías ciudadanas</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Herramientas de Transparencia</h3>
+                    <div class="law-box">
+                        <h4>Portal de Transparencia Económica</h4>
+                        <p>Información presupuestal en línea</p>
+                    </div>
+                    <div class="law-box">
+                        <h4>SECOP</h4>
+                        <p>Sistema Electrónico de Contratación Pública</p>
+                    </div>
+                    <div class="law-box">
+                        <h4>Reportes de Ejecución</h4>
+                        <p>Seguimiento en tiempo real</p>
+                    </div>
+                    <div class="law-box">
+                        <h4>Audiencias Públicas</h4>
+                        <p>Rendición de cuentas</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <h3>Objetivo: Garantizar el uso eficiente y transparente de los recursos públicos</h3>
+            </div>
+        </div>
+
+        <!-- Slide 12: Conclusiones -->
+        <div class="slide">
+            <h2>Conclusiones</h2>
+            
+            <div class="highlight">
+                <p style="font-size: 1.2em; text-align: center; margin-bottom: 25px;">
+                    <strong>El presupuesto público colombiano es un instrumento complejo y fundamental para el funcionamiento del Estado y el desarrollo del país</strong>
+                </p>
+            </div>
+            
+            <div class="two-column">
+                <div>
+                    <h3>Su importancia radica en:</h3>
+                    <div class="principle-item">
+                        <strong>Instrumento de Política Pública</strong><br>
+                        Materializa las prioridades gubernamentales
+                    </div>
+                    <div class="principle-item">
+                        <strong>Herramienta de Desarrollo</strong><br>
+                        Financia inversión social y productiva
+                    </div>
+                    <div class="principle-item">
+                        <strong>Mecanismo de Control</strong><br>
+                        Permite seguimiento y evaluación
+                    </div>
+                    <div class="principle-item">
+                        <strong>Espacio de Participación</strong><br>
+                        Involucra diferentes actores
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Retos Futuros:</h3>
+                    <ul>
+                        <li>Mejorar la eficiencia en asignación de recursos</li>
+                        <li>Fortalecer transparencia y rendición de cuentas</li>
+                        <li>Reducir la rigidez presupuestal</li>
+                        <li>Implementar presupuesto basado en resultados</li>
+                        <li>Consolidar sostenibilidad fiscal</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <h3>Referencias Normativas Principales</h3>
+                <p>Constitución Política • Decreto 111/1996 • Ley 152/1994 • Ley 819/2003 • Leyes 38/1989, 179/1994, 225/1995</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+        
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+        
+        function changeSlide(direction) {
+            if (direction === 1 && currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            } else if (direction === -1 && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+        
+        // Initialize
+        showSlide(0);
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                changeSlide(-1);
+            }
+        });
+    </script>
+</body>
+</html>
