@@ -28,6 +28,7 @@
             border-radius: 15px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             overflow: hidden;
+            position: relative; /* Importante para posicionar los botones relativamente a la presentación */
         }
 
         .slide {
@@ -130,13 +131,15 @@
             margin-top: 20px;
         }
 
+        /* --- Cambios aquí para la navegación --- */
         .navigation {
             position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 20px; /* Distancia desde la parte inferior */
+            right: 20px; /* Distancia desde la derecha */
+            /* Eliminamos 'left' y 'transform' para que se posicione desde la derecha */
             display: flex;
             gap: 15px;
+            z-index: 100; /* Asegura que los botones estén por encima de otros elementos */
         }
 
         .nav-btn {
@@ -162,6 +165,8 @@
             transform: none;
             opacity: 0.7;
         }
+        /* --- Fin de cambios para la navegación --- */
+
 
         .slide-counter {
             position: absolute;
@@ -172,6 +177,7 @@
             padding: 8px 18px;
             border-radius: 25px;
             font-size: 0.9em;
+            z-index: 100; /* Asegura que el contador esté por encima */
         }
 
         .conclusion-box {
@@ -300,6 +306,13 @@
             .key-points {
                 grid-template-columns: 1fr;
                 gap: 15px;
+            }
+
+            /* Ajuste para botones en pantallas pequeñas si fuera necesario, aunque la esquina inferior derecha suele ser buena */
+            .navigation {
+                bottom: 10px;
+                right: 10px;
+                gap: 10px;
             }
         }
     </style>
